@@ -2,6 +2,7 @@ package com.scholanova.ecommerce.cart.service;
 
 import com.scholanova.ecommerce.cart.entity.Cart;
 import com.scholanova.ecommerce.cart.entity.CartItem;
+import com.scholanova.ecommerce.cart.exception.CartException;
 import com.scholanova.ecommerce.product.entity.Product;
 import com.scholanova.ecommerce.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,23 @@ public class CartServiceImpl implements CartService{
     ProductRepository productRepository;
 
     @Override
-    public Cart addProductToCart(Cart cart, Long productId, int quantity) {
+    public Cart addProductToCart(Cart cart, Long productId, int quantity) throws CartException {
         //TODO
-        return cart.addProduct(productRepository.findById(productId).get(),quantity);
+        try{
+            Cart currentCart = cart.addProduct(productRepository.findById(productId).get(),quantity);
+            return currentCart;
+        }
+        catch (Exception e){
+            throw new CartException("Un problème est survenu avec votre panier");
+        }
+
         //return null;
     }
 
     @Override
     public Cart changeProductQuantity(Cart cart, Long productId, int quantity) {
         //TODO
-        return null;
+        Cart currentCart = cart.changeProductQuantity(cart.getCartItemByProductName(productRepository.findById(productId).get().getName()).getProduct(),quantity);
+        return currentCart;
     }
 }

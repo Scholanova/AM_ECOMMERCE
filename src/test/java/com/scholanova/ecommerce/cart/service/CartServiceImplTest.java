@@ -29,7 +29,7 @@ class CartServiceImplTest {
     }*/
 
     @Test
-    public void addProductToCart_ShouldAddTheProductToTheCart() {
+    public void addProductToCart_ShouldAddTheProductToTheCart() throws CartException {
         //given
         Cart cart = new Cart();
         Product product = Product.create("tested", "tested", 10.5f, 0.1f, "EUR");
@@ -42,7 +42,6 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
     public void addProductToCart_ShouldHandleExceptions() {
         //given
         Cart cart = new Cart();
@@ -55,7 +54,6 @@ class CartServiceImplTest {
     }
 
     @Test
-    @Disabled
     public void changeProductQuantity_ShouldChangeQuantity(){
         //given
         Cart cart = new Cart();
