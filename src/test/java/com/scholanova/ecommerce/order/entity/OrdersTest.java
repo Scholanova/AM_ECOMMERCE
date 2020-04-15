@@ -24,7 +24,13 @@ class OrdersTest {
 
     @Test
     public void checkout_ShouldSetOrderStatusToPending(){
-
+        //given
+        Orders o = new Orders();
+        o.createOrder();
+        //when
+        o.checkout();
+        //then
+        assertThat(o.getStatus().equals(OrderStatus.PENDING));
     }
 
     @Test
