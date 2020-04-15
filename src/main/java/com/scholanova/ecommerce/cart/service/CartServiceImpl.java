@@ -22,16 +22,21 @@ public class CartServiceImpl implements CartService{
             return currentCart;
         }
         catch (Exception e){
-            throw new CartException("Un problème est survenu avec votre panier");
+            throw new CartException("Un problème est survenu à l'ajout d'article à votre panier");
         }
 
         //return null;
     }
 
     @Override
-    public Cart changeProductQuantity(Cart cart, Long productId, int quantity) {
+    public Cart changeProductQuantity(Cart cart, Long productId, int quantity) throws CartException {
         //TODO
-        Cart currentCart = cart.changeProductQuantity(cart.getCartItemByProductName(productRepository.findById(productId).get().getName()).getProduct(),quantity);
-        return currentCart;
+        try {
+            Cart currentCart = cart.changeProductQuantity(cart.getCartItemByProductName(productRepository.findById(productId).get().getName()).getProduct(), quantity);
+            return currentCart;
+        }
+        catch (Exception e){
+            throw new CartException("Un problème est survenu lors de la modification de votre panier");
+        }
     }
 }
