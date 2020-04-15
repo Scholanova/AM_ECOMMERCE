@@ -2,6 +2,7 @@ package com.scholanova.ecommerce.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scholanova.ecommerce.cart.entity.Cart;
+import com.scholanova.ecommerce.cart.exception.IllegalArgException;
 import com.scholanova.ecommerce.cart.exception.NotAllowedException;
 import com.sun.xml.bind.v2.TODO;
 
@@ -36,10 +37,15 @@ public class Orders {
     public void createOrder(){
         //TODO
         this.setStatus(OrderStatus.CREATED);
+        this.cart = new Cart();
     }
 
-    public void checkout() throws NotAllowedException {
+    public void checkout() throws NotAllowedException, IllegalArgException {
         //TODO
+        //Si le cart est sans items car un produit avec quantité nulle lève déjà une exception
+        if(this.getCart().getCartItems().size()==0){
+            throw new IllegalArgException("il n'y a rien dans votre panier");
+        }
         if(this.getStatus().equals(OrderStatus.CLOSED)){
             throw new NotAllowedException("Vous n'êtes pas autorisé à faire ceci");
         }else{
