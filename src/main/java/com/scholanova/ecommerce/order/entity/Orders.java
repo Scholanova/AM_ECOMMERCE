@@ -2,6 +2,7 @@ package com.scholanova.ecommerce.order.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.scholanova.ecommerce.cart.entity.Cart;
+import com.scholanova.ecommerce.cart.exception.NotAllowedException;
 import com.sun.xml.bind.v2.TODO;
 
 import javax.persistence.*;
@@ -34,12 +35,17 @@ public class Orders {
 
     public void createOrder(){
         //TODO
+        this.setStatus(OrderStatus.CREATED);
     }
 
-    public void checkout(){
+    public void checkout() throws NotAllowedException {
         //TODO
-        this.setStatus(OrderStatus.PENDING);
-        this.setIssueDate(new Date(Calendar.getInstance().getTime().getTime()));
+        if(this.getStatus().equals(OrderStatus.CLOSED)){
+            throw new NotAllowedException("Vous n'êtes pas autorisé à faire ceci");
+        }else{
+            this.setStatus(OrderStatus.PENDING);
+            this.setIssueDate(new Date(Calendar.getInstance().getTime().getTime()));
+        }
     }
 
     public void getDiscount(){

@@ -1,5 +1,7 @@
 package com.scholanova.ecommerce.order.entity;
 
+import com.scholanova.ecommerce.cart.exception.CartException;
+import com.scholanova.ecommerce.cart.exception.NotAllowedException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrdersTest {
 
     @Test
-    public void checkout_ShouldSetTheDateAndTimeOfTodayInTheOrder(){
+    public void checkout_ShouldSetTheDateAndTimeOfTodayInTheOrder() throws NotAllowedException {
         //given
         Orders o = new Orders();
         o.createOrder();
@@ -23,7 +25,7 @@ class OrdersTest {
     }
 
     @Test
-    public void checkout_ShouldSetOrderStatusToPending(){
+    public void checkout_ShouldSetOrderStatusToPending() throws NotAllowedException {
         //given
         Orders o = new Orders();
         o.createOrder();
@@ -34,8 +36,14 @@ class OrdersTest {
     }
 
     @Test
-    public void checkout_ShouldThrowNotAllowedExceptionIfStatusIsClosed(){
-
+    public void checkout_ShouldThrowNotAllowedExceptionIfStatusIsClosed() throws NotAllowedException {
+        //given
+        Orders o = new Orders();
+        o.createOrder();
+        //when
+        o.setStatus(OrderStatus.CLOSED);
+        //then
+        assertThrows(NotAllowedException.class,() -> o.checkout());
     }
 
     @Test
