@@ -3,14 +3,23 @@ package com.scholanova.ecommerce.order.entity;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.Calendar;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
+
 class OrdersTest {
 
     @Test
     public void checkout_ShouldSetTheDateAndTimeOfTodayInTheOrder(){
-
+        //given
+        Orders o = new Orders();
+        o.createOrder();
+        //when
+        o.checkout();
+        //then
+        assertThat(o.getIssueDate().equals(Calendar.getInstance().getTime().getTime()));
     }
 
     @Test
