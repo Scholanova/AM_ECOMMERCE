@@ -7,8 +7,11 @@ import com.scholanova.ecommerce.cart.exception.NotAllowedException;
 import com.sun.xml.bind.v2.TODO;
 
 import javax.persistence.*;
-import java.sql.Date;
+//import java.sql.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 
 @Entity(name="orders")
 public class Orders {
@@ -34,10 +37,15 @@ public class Orders {
     public Orders() {
     }
 
-    public void createOrder(){
+    public static Orders createOrder(String number, Cart cart){
         //TODO
-        this.setStatus(OrderStatus.CREATED);
-        this.cart = new Cart();
+        /*this.setStatus(OrderStatus.CREATED);
+        this.cart = new Cart();*/
+        Orders orders = new Orders();
+        orders.number = number;
+        orders.status = OrderStatus.CREATED;
+        orders.cart = cart;
+        return orders;
     }
 
     public void checkout() throws NotAllowedException, IllegalArgException {
@@ -54,16 +62,31 @@ public class Orders {
         }
     }
 
-    public void getDiscount(){
+    public BigDecimal getDiscount(){
         //TODO
+        BigDecimal total = this.getCart().getTotalPrice();
+        if(total.floatValue() < 100f){
+            return new BigDecimal(0);
+        }else {
+            return new BigDecimal(5);
+        }
     }
 
-    public void getOrderPrice(){
+    public BigDecimal getOrderPrice(){
         //TODO
+        BigDecimal valueBeforeDiscount = this.getCart().getTotalPrice();
+
+
+
+        BigDecimal total = valueBeforeDiscount.multiply(new BigDecimal(1).subtract(this.getDiscount().divide(new BigDecimal(100))));
+
+
+        return total;
     }
 
     public void close(){
         //TODO
+        this.status = OrderStatus.CLOSED;
     }
 
 
@@ -93,7 +116,11 @@ public class Orders {
 
     public Cart getCart() {return cart;}
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setCart(Cart cart) throws NotAllowedException {
+        if(this.getStatus().equals(OrderStatus.CLOSED)){
+            throw new NotAllowedException("Vous n'êtes pas autorisé à modifier le panier");
+        }else{
+            this.cart = cart;
+        }
     }
 }
